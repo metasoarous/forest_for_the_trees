@@ -1,16 +1,29 @@
-= acts_as_tree_with_dotted_ids
+= ForestForTheTrees
 
-This is an extension to Rails good old acts_as_tree which uses an extra "dotted_ids" column 
-which stores the path of the node as a string of record IDs joined by dots, hence the name.
+ForestForTheTrees is a gem designed for making tree and forest relationships easier to deal with. Situations where some parent model has associated with it tree nodes come up quite frequently (such as sections within a document, or nested tasks within a project), and such situations tend to beg for the same methods and helpers. Some of these fall on the side of the tree while others fall on the side of the forest. While other plugins seek to address the tree side of this issue, this plugin addresses both. 
 
-This optimization solves performance issues related to in-database tree structure by allowing 
-for direct O(1) ancestor/child verification and O(N) subtree access with one single query.
+== A Little History
 
-  class Category < ActiveRecord::Base
-    acts_as_tree_with_dotted_ids :order => "name"
+This gem is a fork of a fork - it is based off of the good old acts_as_tree gem and the extensions made to it and rereleased under the name acts_as_tree_with_dotted_ids. 
+
+The second gem mentioned is designed to fix performance issues with the first by adding a column which stores the path of the node as a string of record IDs joined by dots, hence the name. This optimization solves performance issues related to in-database tree structure by allowing for direct O(1) ancestor/child verification and O(N) subtree access with one single query.
+
+=== In yer classes
+
+  class TreeClass < ActiveRecord::Base
+    acts_as_forest_tree :order => "name" #Order param optional
   end
+
+	class ForestClass < ActiveRecord::Base
+		acts_as_forest_floor :tree_class
+	end
+	
+	
+== The rest of this doc is pending development and is basically still straight from the docs for acts_as_tree_with_dotted_ids.
+
+
   
-Example:
+=== How to use
 
   root
    \_ child1
@@ -65,7 +78,12 @@ If you already have an +acts_as_tree+ model, you can easily upgrade it to take a
 
 == Compatibility
 
-Tested with Rails 2.x and MySQL 5.x as well as SQLite.
+Base acts_as_tree ested with Rails 2.x and MySQL 5.x as well as SQLite
+
+
+== TODO
+
+* Make it so that the foreign key is flexible in definition of roots for the ForestFloor inheriting class.
 
 
 == Thanks
@@ -76,3 +94,5 @@ Kudos to all the contributors to the original plugin.
 Copyright (c) 2007 David Heinemeier Hansson, released under the MIT license
 
 Copyright (c) 2008 Xavier Defrang, released under the MIT license
+
+Copyright (c) 2010 Christopher Small, released under the MIT license

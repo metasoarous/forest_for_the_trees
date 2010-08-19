@@ -2,10 +2,11 @@ require 'test/unit'
 
 require 'rubygems'
 require 'active_record'
+require "yaml"
 
 $:.unshift File.dirname(__FILE__) + '/../lib'
 
-require 'active_record/acts/tree_with_dotted_ids'
+require 'forest_for_the_trees'
 
 require File.dirname(__FILE__) + '/../init'
 
@@ -22,7 +23,7 @@ class Test::Unit::TestCase
   end
 end
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
+ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + '/database.yml')['test'].symbolize_keys)
 
 # AR keeps printing annoying schema statements
 $stdout = StringIO.new
@@ -49,15 +50,15 @@ class Mixin < ActiveRecord::Base
 end
 
 class TreeMixin < Mixin 
-  acts_as_tree_with_dotted_ids :foreign_key => "parent_id", :order => "id"
+  acts_as_tree_node :foreign_key => "parent_id", :order => "id"
 end
 
 class TreeMixinWithoutOrder < Mixin
-  acts_as_tree_with_dotted_ids :foreign_key => "parent_id"
+  acts_as_tree_node :foreign_key => "parent_id"
 end
 
 class RecursivelyCascadedTreeMixin < Mixin
-  acts_as_tree_with_dotted_ids :foreign_key => "parent_id"
+  acts_as_tree_node :foreign_key => "parent_id"
   has_one :first_child, :class_name => 'RecursivelyCascadedTreeMixin', :foreign_key => :parent_id
 end
 

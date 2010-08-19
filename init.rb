@@ -1,2 +1,3 @@
-require 'active_record/acts/tree_with_dotted_ids'
-ActiveRecord::Base.send :include, ActiveRecord::Acts::TreeWithDottedIds
+require 'forest_for_the_trees'
+
+ActiveRecord::Base.send :extend, ForestForTheTrees::ActivationMethods
